@@ -1,0 +1,56 @@
+version: "3"
+services:
+  https-portal:
+    container_name: 'docker_https-portal_1'
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - nginx
+    restart: on-failure:5
+    volumes:
+      - ./certs:/var/lib/https-portal
+    environment:
+      WORKER_PROCESSES: auto
+      WORKER_CONNECTIONS: 2048
+      CLIENT_MAX_BODY_SIZE: 128M
+      STAGE: local
+      DOMAINS: >-
+          localhost -> http://nginx
+  
+  php:
+    build: ./php
+    volumes:
+      - ../app:/var/www
+    tty: true
+    depends_on: 
+      - "mysql"
+
+  nginx:
+    image: nginx:1.21
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ../app:/var/www
+    restart: always
+    depends_on: 
+      - "php"
+  
+  stripe-cli:
+    image: stripe/stripe-cli:v1.7.13
+    command: listen --forward-to localhost/stripe/webhook
+    tty: true
+  
+  mysql:
+    build: ./mysql
+    volumes:
+      - ./mysql/dbdata:/var/lib/mysql
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-times}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-user!}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root!}
+      TZ: "Asia/Tokyo"
+    ports:
+      - ${MYSQL_PORT:-3306}:3306

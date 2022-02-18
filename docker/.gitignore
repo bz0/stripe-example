@@ -1,0 +1,4 @@
+# Docker Compose
+.env
+mysql/dbdata/
+certs/
