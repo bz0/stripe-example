@@ -4,3 +4,6 @@ up:
 
 build:
 	docker-compose build --no-cache
+
+php-exec:
+	docker-compose exec php bash
