@@ -21,4 +21,13 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::middleware(['auth'])->group(function() {
+    Route::get('payment/stripe/status', 'App\Http\Controllers\Payment\Stripe\StripeController@status');
+    Route::post('payment/stripe/subscribe', 'App\Http\Controllers\Payment\Stripe\StripeController@subscribe');
+    Route::post('payment/stripe/cancel', 'App\Http\Controllers\Payment\Stripe\StripeController@cancel');
+    Route::post('payment/stripe/resume', 'App\Http\Controllers\Payment\Stripe\StripeController@resume');
+    Route::post('payment/stripe/change_plan', 'App\Http\Controllers\Payment\Stripe\StripeController@change_plan');
+    Route::post('payment/stripe/update_card', 'App\Http\Controllers\Payment\Stripe\StripeController@update_card');
+});
+
 require __DIR__.'/auth.php';
