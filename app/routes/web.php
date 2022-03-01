@@ -13,13 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/test', function () {
+    $test = "テスト";
+    $debug = "デバッグ";
+    $testOfDebug = "${debug}の${test}用です！！！";
+    var_dump($testOfDebug);
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function() {
     Route::get('payment/stripe/status', 'App\Http\Controllers\Payment\Stripe\StripeController@status');
@@ -29,5 +28,9 @@ Route::middleware(['auth'])->group(function() {
     Route::post('payment/stripe/change_plan', 'App\Http\Controllers\Payment\Stripe\StripeController@change_plan');
     Route::post('payment/stripe/update_card', 'App\Http\Controllers\Payment\Stripe\StripeController@update_card');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
