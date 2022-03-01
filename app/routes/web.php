@@ -17,12 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('user')->middleware(['auth'])->group(function() {
-    // 課金
-    Route::get('payment/stripe/status', 'Payment\Stripe\StripeController@status');
-    Route::post('payment/stripe/subscribe', 'Payment\Stripe\StripeController@subscribe');
-    Route::post('payment/stripe/cancel', 'Payment\Stripe\StripeController@cancel');
-    Route::post('payment/stripe/resume', 'Payment\Stripe\StripeController@resume');
-    Route::post('payment/stripe/change_plan', 'Payment\Stripe\StripeController@change_plan');
-    Route::post('payment/stripe/update_card', 'Payment\Stripe\StripeController@update_card');
-});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
