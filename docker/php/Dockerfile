@@ -15,6 +15,5 @@ RUN apt-get update && \
   docker-php-ext-install intl pdo_mysql zip bcmath
 
 COPY ./php.ini /usr/local/etc/php/php.ini
-COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 WORKDIR /var/www/
